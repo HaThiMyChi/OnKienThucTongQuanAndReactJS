@@ -5,7 +5,7 @@ import config from './config.js'
 import { response } from 'express'
 
 const getDatabase = () => {
-    const rawDB = fs.readFileSync('/database.json')
+    const rawDB = fs.readFileSync('./database.json')
     const database = JSON.parse(rawDB)
     return database
 }
@@ -17,7 +17,7 @@ const writeDatabase = (data) => {
 
 export const loginController = async (req) => {
     const body = req.body
-    const {uername, password} = body
+    const {username, password} = body
     const database = getDatabase()
     const isAccountExist = database.users.some(
         (user) => user.username === username && user.password === password
@@ -43,11 +43,11 @@ export const loginController = async (req) => {
             accessToken$,
             refreshToken$
         ])
-        database.access_token.push({
+        database.access_tokens.push({
             username,
             token: access_token
         })
-        database.refresh_token.push({
+        database.refresh_tokens.push({
             username,
             token: refresh_token
         })
@@ -85,7 +85,7 @@ export const refreshTokenController = async (req) => {
         const isAccountExist = database.users.some(
             (user) => user.username === username
         )
-        const isRefreshTokenExist = database.refresh_token.some(
+        const isRefreshTokenExist = database.refresh_tokens.some(
             (refreshTokenObject) => refreshTokenObject.token === refresh_token
         )
 
@@ -97,7 +97,7 @@ export const refreshTokenController = async (req) => {
                 },
                 config.jwt_expire_access_token
             )
-            database.accessToken.push({
+            database.access_tokens.push({
                 username,
                 token: access_token
             })
@@ -114,6 +114,68 @@ export const refreshTokenController = async (req) => {
             status: STATUS.NOT_FOUND,
             response: { 
                 message: 'Refresh Token không tồn tại' 
+            }
+        }
+    } catch (error) {
+        return {...error, response: error.error}
+    }
+}
+
+export const getProfileController = async (req) => {
+    console.log('req', req)
+    const access_token = req.headers.authorization?.replace('Bearer ', '')
+    try {
+        const decodedAccessToken = await verifyToken(access_token)
+        const {username} = decodedAccessToken
+        const database = getDatabase()
+        const account = database.users.find((user) => user.username === username)
+        const isAccessTokenExist = database.access_tokens.some(
+            (accessTokenObject) => accessTokenObject.token === access_token
+        )
+        if (account && isAccessTokenExist) {
+            return {
+                status: STATUS.OK,
+                response: {
+                    message: 'Lấy thông tin profile thành công',
+                    data: account
+                }
+            }
+        }
+        return {
+            status: STATUS.NOT_FOUND,
+            response: {
+                message: 'Không tồn tại user'
+            }
+        }
+    } catch (error) {
+        return {...error, response: error.error}
+    }
+}
+
+export const getProductsController = async (req) => {
+    const access_token = req.headers.authorization?.replace('Bearer ', '')
+    try {
+        const decodedAccessToken = await verifyToken(access_token)
+        const {username} = decodedAccessToken
+        const database = getDatabase()
+        const account = database.users.find((user) => user.username === username)
+        const isAccessTokenExist = database.access_tokens.some(
+            (accessTokenObject) => accessTokenObject.token === access_token
+        )
+        if (account && isAccessTokenExist) {
+            return {
+                status: STATUS.OK,
+                response: {
+                    message: 'Lấy danh sách sản phẩm thành công',
+                    data: database.products
+                }
+            }
+        }
+
+        return {
+            status: STATUS.NOT_FOUND,
+            response: {
+                message: 'Không tồn tại user'
             }
         }
     } catch (error) {
