@@ -620,3 +620,13 @@ import React, { forwardRef } from "react";
 const Input = (props, ref) => <input ref={ref} type="text" style={style} />;
 export default forwardRef(Input);
 ```
+
+**Note**:
+✅ Khi dùng createRef:
+
+Ref chỉ dùng trong component hiện tại, không chia sẻ ra ngoài.
+
+Mỗi lần render, createRef() sẽ tạo một ref mới (nên không nên gọi trong body function mỗi lần render).
+
+🧩 2. forwardRef – Dùng khi component cha cần truy cập DOM của component con
+👉 Khi bạn muốn truyền ref từ cha xuống con để cha điều khiển phần tử DOM hoặc component con.
