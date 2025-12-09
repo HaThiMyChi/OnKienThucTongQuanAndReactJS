@@ -37,6 +37,37 @@ export const deletePost = createAsyncThunk('blog/deletePost', async (postId: str
   return response.data
 })
 
+export const addPost = createAsyncThunk('blog/addPost', async (body: Omit<Post, 'id'>, thunkAPI) => {
+  try {
+    const response = await http.post<Post>('posts', body, {
+      signal: thunkAPI.signal // Dùng để cancel request
+    })
+    return response.data
+  } catch (error: any) {
+    if (error.name === 'AxiosError' && error.response.status === 422) {
+      return thunkAPI.rejectWithValue(error.response.data)
+    }
+    throw error
+  }
+})
+
+export const updatePost = createAsyncThunk(
+  'blog/updatePost',
+  async ({ postId, body }: { postId: string; body: Post }, thunkAPI) => {
+    try {
+      const response = await http.put<Post>(`posts/${postId}`, body, {
+        signal: thunkAPI.signal
+      })
+      return response.data
+    } catch (error: any) {
+      if (error.name === 'AxiosError' && error.response.status === 422) {
+        return thunkAPI.rejectWithValue(error.response.data)
+      }
+      throw error
+    }
+  }
+)
+
 const blogSlice = createSlice({
   name: 'blog',
   initialState,
@@ -61,6 +92,38 @@ const blogSlice = createSlice({
         if (deletePostIndex !== -1) {
           state.postList.splice(deletePostIndex, 1)
         }
+      })
+      .addCase(addPost.fulfilled, (state, action) => {
+        state.postList.push(action.payload)
+      })
+      .addCase(updatePost.fulfilled, (state, action) => {
+        state.postList.find((post, index) => {
+          if (post.id === action.payload.id) {
+            state.postList[index] = action.payload
+            return true
+          }
+          return false
+        })
+        state.editingPost = null
+      })
+      .addMatcher<PendingAction>(
+        (action) => action.type.endsWith('/pending'),
+        (state, action) => {
+          state.loading = true
+          state.currentRequestId = action.meta.requestId
+        }
+      )
+      .addMatcher<RejectedAction | FulfilledAction>(
+        (action) => action.type.endsWith('/rejected') || action.type.endsWith('/fulfilled'),
+        (state, action) => {
+          if (state.loading && state.currentRequestId === action.meta.requestId) {
+            state.loading = false
+            state.currentRequestId = undefined
+          }
+        }
+      )
+      .addDefaultCase((state, action) => {
+        console.log(`action type: ${action.type}`, current(state))
       })
   }
 })

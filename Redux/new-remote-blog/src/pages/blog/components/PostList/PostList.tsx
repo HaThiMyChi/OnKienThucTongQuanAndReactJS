@@ -7,8 +7,7 @@ import { Fragment, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState, useAppDispatch } from '../../../../store'
 import SkeletonPost from '../SkeletonPost'
-import PostItem from '../PostItem/PostItem'
-
+import PostItem from '../PostItem'
 /**
  * Dispatch action type: "blog/getPostList"
  *
