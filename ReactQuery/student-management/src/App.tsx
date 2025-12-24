@@ -3,6 +3,7 @@ import Dashboard from 'pages/Dashboard'
 import MainLayout from 'layouts/MainLayout'
 import About from 'pages/About'
 import Students from 'pages/Students'
+import AddStudent from 'pages/AddStudent'
 import { useRoutes } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import { useIsFetching, useIsMutating } from '@tanstack/react-query'
@@ -17,6 +18,10 @@ function App() {
     {
       path: '/students',
       element: <Students />
+    },
+    {
+      path: '/students/add',
+      element: <AddStudent />
     },
     {
       path: '/about',

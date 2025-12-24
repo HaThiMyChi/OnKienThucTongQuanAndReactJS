@@ -8,7 +8,7 @@ import http from 'utils/http'
  */
 
 export const getStudents = (page: number | string, limit: number | string, signal?: AbortSignal) => {
-  http.get<Students>('students', {
+  return http.get<Students>('students', {
     params: {
       _page: page,
       _limit: limit
@@ -18,3 +18,6 @@ export const getStudents = (page: number | string, limit: number | string, signa
 }
 
 export const getStudent = (id: number | string) => http.get<Student>(`students/${id}`)
+
+// DELETE - không trả về dữ liệu có ý nghĩa
+export const deleteStudent = (id: number | string) => http.delete<{}>(`students/${id}`)
