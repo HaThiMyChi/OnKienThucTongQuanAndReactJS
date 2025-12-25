@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
+import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer } from 'react-toastify'
 import { BrowserRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
@@ -24,6 +26,7 @@ root.render(
   <BrowserRouter>
     <QueryClientProvider client={queryClient}>
       <App />
+      <ToastContainer position='top-right' autoClose={3000} />
 
       {/* - Khi cài ReactQueryDevTool thì trên giao diện sẽ xuất hiện cái logo bông hoa màu đỏ.
        *  - Và đó là cái Dev Tool của React Query

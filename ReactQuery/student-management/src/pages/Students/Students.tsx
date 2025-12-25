@@ -141,7 +141,8 @@ export default function Students() {
 
   const fetchStudent = (second: number) => {
     const id = '6'
-    queryClient.prefetchQuery(['student', id], {
+    queryClient.prefetchQuery({
+      queryKey: ['student', id],
       queryFn: () => getStudent(id),
       staleTime: second * 1000
     })
@@ -154,9 +155,10 @@ export default function Students() {
    */
 
   const handlePrefetchStudent = (id: number) => {
-    queryClient.prefetchQuery(['student', String(id)], {
+    queryClient.prefetchQuery({
+      queryKey: ['student', String(id)],
       queryFn: () => getStudent(id),
-      staleTime: 10 * 100
+      staleTime: 10 * 1000
     })
   }
 
@@ -258,12 +260,13 @@ export default function Students() {
                     <td className='px-6 py-4'>{student.email}</td>
                     <td className='px-6 py-4 text-right'>
                       <Link
-                        to={`/student/${student.id}`}
+                        to={`/students/${student.id}`}
                         className='mr-5 font-medium text-blue-600 hover:underline dark:text-blue-500'
                       >
                         Edit
                       </Link>
                       <button
+                        type='button'
                         className='font-medium text-red-600 disabled:opacity-50 dark:text-red-500'
                         onClick={() => handleDeleteStudent(student.id)}
                         disabled={deleteStudentMutation.isPending}

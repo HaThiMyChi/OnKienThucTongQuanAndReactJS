@@ -598,6 +598,7 @@ return (
                       Edit
                     </Link>
                     <button
+                      type='button'
                       className='font-medium text-red-600 dark:text-red-500'
                       onClick={() => handleDelete(student.id)}
                     >

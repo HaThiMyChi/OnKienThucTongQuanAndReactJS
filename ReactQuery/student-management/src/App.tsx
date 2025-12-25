@@ -5,7 +5,6 @@ import About from 'pages/About'
 import Students from 'pages/Students'
 import AddStudent from 'pages/AddStudent'
 import { useRoutes } from 'react-router-dom'
-import { ToastContainer } from 'react-toastify'
 import { useIsFetching, useIsMutating } from '@tanstack/react-query'
 import Spinner from 'components/Spinner'
 
@@ -18,6 +17,10 @@ function App() {
     {
       path: '/students',
       element: <Students />
+    },
+    {
+      path: '/students/:id',
+      element: <AddStudent />
     },
     {
       path: '/students/add',
@@ -42,7 +45,6 @@ function App() {
   return (
     <div className='App'>
       {isFetching + isMutating > 0 && <Spinner />}
-      <ToastContainer />
       <MainLayout>{elements}</MainLayout>
     </div>
   )
