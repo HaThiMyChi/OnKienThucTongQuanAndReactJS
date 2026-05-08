@@ -14,7 +14,6 @@
   formState → trạng thái của form
 
 Với form đăng ký, bạn nên nhớ trước 5 cái quan trọng nhất:
-
 register
 handleSubmit
 errors
@@ -28,3 +27,7 @@ isSubmitting
 Browser sẽ không tự hiện lỗi nữa.
 
 Lúc này mình sẽ để React Hook Form tự validate và tự show lỗi:
+
+# autoComplete="on" → cho browser tự gợi ý / tự điền
+
+autoComplete="off" → hạn chế browser tự điền
