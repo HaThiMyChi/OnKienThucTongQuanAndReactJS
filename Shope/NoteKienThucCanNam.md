@@ -41,3 +41,67 @@ autoComplete="off" → hạn chế browser tự điền
 ✅ Extensible - Dễ compose, thêm custom validators
 ✅ Async support - API validation
 ✅ Better errors - Error handling tốt hơn
+
+# React Query
+
+1. React Query là gì?
+
+React Query là state management cho server data (dữ liệu từ API)
+
+```ts Tính năng Dùng khi nào
+useQuery Lấy dữ liệu từ API (GET)
+useMutation Tạo/cập nhật/xóa dữ liệu (POST/PUT/DELETE)
+invalidateQueries Dữ liệu đã cũ, cần fetch lại
+setQueryData Update cache mà không fetch
+getQueryData Đọc cache data
+refetch Fetch lại query hiện tại
+
+✨ Lợi ích React Query
+✅ Tự động cache - Không fetch lặp lại
+✅ Background refetch - Cập nhật data tự động
+✅ Synchronized state - Tất cả components dùng chung 1 data
+✅ Error handling - Tự động retry
+✅ DevTools - Debug dễ dàng
+✅ Optimistic updates - Update UI trước khi server confirm
+```
+
+useQuery({
+queryKey: ['products'],
+queryFn: () => api.getProducts(),
+
+// 1. refetchOnMount (mặc định: true)
+// Fetch khi component mount lần đầu
+refetchOnMount: true,
+
+// 2. refetchOnWindowFocus (mặc định: true)
+// Fetch khi user focus lại window/tab
+refetchOnWindowFocus: true,
+
+// 3. refetchOnReconnect (mặc định: true)
+// Fetch khi kết nối internet lại
+refetchOnReconnect: true,
+
+// 4. refetchInterval (mặc định: false)
+// Fetch tự động cứ N ms
+refetchInterval: 30000, // 30 giây
+})
+
+## refetchOnWindowFocus: true // Mặc định tất cả fetch khi focus
+
+`ts So sánh các Refetch Strategies `
+// Timeline:
+// ─────────────────────────────────────────
+// ↓ Component mount
+// refetchOnMount: true → Fetch lần 1
+//  
+// ↓ User chuyển tab
+// [rời khỏi window]
+//  
+// ↓ User quay lại tab (Window Focus)
+// refetchOnWindowFocus: true → Fetch lần 2
+//  
+// ↓ Cứ 30 giây (nếu refetchInterval: 30000)
+// refetchInterval: 30000 → Fetch lần 3, 4, 5...
+//  
+// ↓ Internet mất & kết nối lại
+// refetchOnReconnect: true → Fetch lần N
