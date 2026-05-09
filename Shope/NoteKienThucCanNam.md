@@ -31,3 +31,13 @@ Lúc này mình sẽ để React Hook Form tự validate và tự show lỗi:
 # autoComplete="on" → cho browser tự gợi ý / tự điền
 
 autoComplete="off" → hạn chế browser tự điền
+
+# Tóm tắt lợi ích Yup Schema
+
+✅ Tự động type inference - Không cần write types
+✅ Pure function - Không phụ thuộc getValues
+✅ Dễ đọc & maintain - Fluent API
+✅ Reusable - Dùng ở nhiều components
+✅ Extensible - Dễ compose, thêm custom validators
+✅ Async support - API validation
+✅ Better errors - Error handling tốt hơn
