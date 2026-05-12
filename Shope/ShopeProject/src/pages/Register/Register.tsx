@@ -7,6 +7,8 @@ import { schema, type Schema } from '../../utils/rules'
 import { registerAccount } from '../../apis/auth.api'
 import { useMutation } from '@tanstack/react-query'
 import omit from 'lodash/omit'
+import { isAxiosUnprocessableEntityError } from '../../utils/utils'
+import type { ResponseApi } from '../../types/utils.type'
 
 type FormData = Schema
 
@@ -17,6 +19,7 @@ export default function Register() {
     register,
     handleSubmit,
     watch,
+    setError,
     formState: { errors }
   } = useForm<FormData>({
     resolver: yupResolver(schema)
@@ -41,13 +44,38 @@ export default function Register() {
         console.log('Đăng ký thành công', data)
       },
       onError(error) {
-        console.log('Lỗi:', error)
+        if (isAxiosUnprocessableEntityError<ResponseApi<Omit<FormData, 'confirm_password'>>>(error)) {
+          const formError = error.response?.data.data
+          if (formError) {
+            Object.keys(formError).forEach((key) => {
+              // key as keyof là một trong các key của FormData
+              setError(key as keyof Omit<FormData, 'confirm_password'>, {
+                message: formError[key as keyof Omit<FormData, 'confirm_password'>],
+                type: 'Server'
+              })
+            })
+          }
+
+          // Cách 2:
+          // if (formError?.email) {
+          //   setError('email', {
+          //     message: formError.email,
+          //     type: 'Server'
+          //   })
+          // }
+          // if (formError?.password) {
+          //   setError('password', {
+          //     message: formError.password,
+          //     type: 'Server'
+          //   })
+          // }
+        }
       }
     })
   })
 
-  const value = watch()
-  console.log('value', value)
+  // const value = watch()
+  // console.log('value', value)
 
   return (
     <div className='bg-orange'>

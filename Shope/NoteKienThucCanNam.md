@@ -106,13 +106,17 @@ refetchInterval: 30000, // 30 giây
 // ↓ Internet mất & kết nối lại
 // refetchOnReconnect: true → Fetch lần N
 
-## Omit là gì
+## omit là gì
 
-Omit trong lodash dùng để tạo object mới bằng cách bỏ đi một hoặc nhiều key không cần thiết
+omit trong lodash dùng để tạo object mới bằng cách bỏ đi một hoặc nhiều key không cần thiết
 
 \_.omit(object, ['key1', 'key2'])
 
 EN: omit is lodash is used to create a new object by removing one or more unwanted keys from the original object
+
+### Omit trong typescript là gì?
+
+// Omit trong TypeScript Dùng để tạo type mới, bỏ field confirm_password.
 
 ### useMutation
 
@@ -128,3 +132,11 @@ useMutation giống như một công cụ giúp mình:
 4. Xử lý sau khi API thành công, ví dụ refresh lại danh sách.
 5. Giúp code gọn hơn thay vì tự viết nhiều useState.
 ```
+
+# Cách debug
+
+Cách nhớ ngắn gọn
+Bị nhảy vào file .js lạ → bấm Shift + F11 để thoát ra
+Không muốn nhảy vào hàm con → bấm F10
+Muốn chạy tới breakpoint tiếp theo → bấm F5
+Chỉ muốn vào hàm mình tự viết → bấm F11
