@@ -105,3 +105,26 @@ refetchInterval: 30000, // 30 giây
 //  
 // ↓ Internet mất & kết nối lại
 // refetchOnReconnect: true → Fetch lần N
+
+## Omit là gì
+
+Omit trong lodash dùng để tạo object mới bằng cách bỏ đi một hoặc nhiều key không cần thiết
+
+\_.omit(object, ['key1', 'key2'])
+
+EN: omit is lodash is used to create a new object by removing one or more unwanted keys from the original object
+
+### useMutation
+
+useMutation is used to perform (để thực hiện) server-side actions that modify data, such as POST, PUT, PATCH or DELETE requests. Unlike useQuery, which is mainly used for fetching data, useMutation is triggered manually by calling mutate. It also provides useful states like loading, success, error and callbacks such as onSuccess and onError. After a mutation succeeds, we can invalidate related queries to refetch updated data.
+
+```ts Cách hiểu ngắn gọn
+
+useMutation giống như một công cụ giúp mình:
+
+1. Gọi API thay đổi dữ liệu.
+2. Biết khi nào API đang loading.
+3. Biết khi nào thành công hoặc thất bại.
+4. Xử lý sau khi API thành công, ví dụ refresh lại danh sách.
+5. Giúp code gọn hơn thay vì tự viết nhiều useState.
+```

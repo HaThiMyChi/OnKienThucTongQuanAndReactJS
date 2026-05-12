@@ -4,6 +4,9 @@ import { getRules } from '../../utils/rules'
 import Input from '../../components/Input'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { schema, type Schema } from '../../utils/rules'
+import { registerAccount } from '../../apis/auth.api'
+import { useMutation } from '@tanstack/react-query'
+import omit from 'lodash/omit'
 
 type FormData = Schema
 
@@ -14,25 +17,37 @@ export default function Register() {
     register,
     handleSubmit,
     watch,
-    getValues,
     formState: { errors }
   } = useForm<FormData>({
     resolver: yupResolver(schema)
   })
 
   // const rules = getRules(getValues)
+  // Omit trong TypeScript Dùng để tạo type mới, bỏ field confirm_password.
+  // omit trong lodash Dùng để tạo object mới, bỏ field confirm_password.
+  // confirm_password chỉ dùng ở frontend để validate password nhập lại có khớp hay không. Sau khi validate xong, mình không cần gửi confirm_password lên backend, nên dùng omit để remove field này trước khi call API.
 
-  const onSubmit = handleSubmit(
-    (data) => {
-      console.log('data', data)
-    },
-    (data) => {
-      const password = getValues('password')
-      console.log('password', password)
-    }
-  )
+  const registerAccountMutation = useMutation({
+    mutationFn: (body: Omit<FormData, 'confirm_password'>) => registerAccount(body)
+  })
 
-  console.log(errors)
+  // Về data trong handleSubmit(data):
+  // data được react-hook-form tự động thu thập từ các Input field thông qua register()
+
+  const onSubmit = handleSubmit((data) => {
+    const body = omit(data, ['confirm_password'])
+    registerAccountMutation.mutate(body, {
+      onSuccess(data) {
+        console.log('Đăng ký thành công', data)
+      },
+      onError(error) {
+        console.log('Lỗi:', error)
+      }
+    })
+  })
+
+  const value = watch()
+  console.log('value', value)
 
   return (
     <div className='bg-orange'>
