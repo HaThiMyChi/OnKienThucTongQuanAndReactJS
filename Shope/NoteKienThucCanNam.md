@@ -133,6 +133,11 @@ useMutation giống như một công cụ giúp mình:
 5. Giúp code gọn hơn thay vì tự viết nhiều useState.
 ```
 
+### Phân biệt position absolute, relative trong CSS
+
+relative = làm mốc cho con absolute
+absolute = bay ra khỏi layout và bám theo cha relative
+
 # Cách debug
 
 Cách nhớ ngắn gọn
