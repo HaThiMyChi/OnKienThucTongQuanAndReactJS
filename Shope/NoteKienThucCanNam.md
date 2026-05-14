@@ -138,6 +138,28 @@ useMutation giống như một công cụ giúp mình:
 relative = làm mốc cho con absolute
 absolute = bay ra khỏi layout và bám theo cha relative
 
+### Outlet là gì?
+
+<Outlet/>
+
+Outlet là nơi React Router render route con
+
+```ts
+{
+  path: '',
+  element: <ProtectedRoute />,
+  children: [
+    {
+      path: 'profile',
+      element: <Profile />
+    }
+  ]
+}
+```
+
+Khi vào /profile, React Router chạy ProtectedRoute trước
+Nếu hợp lệ, <Outlet/> sẽ render component con là <Profile />
+
 # Cách debug
 
 Cách nhớ ngắn gọn
