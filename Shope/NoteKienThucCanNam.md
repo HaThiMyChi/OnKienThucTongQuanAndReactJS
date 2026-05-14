@@ -160,6 +160,10 @@ Outlet là nơi React Router render route con
 Khi vào /profile, React Router chạy ProtectedRoute trước
 Nếu hợp lệ, <Outlet/> sẽ render component con là <Profile />
 
+### Trick giúp tăng tốc độ truy xuất bộ nhớ
+
+Trick giúp tăng tốc độ truy xuất bộ nhớ là các kỹ thuật giúp lấy dữ liệu nhanh hơn và tránh xử lý lặp lại không cần thiết. Ví dụ dùng cache, dùng Map/Object để tìm kiếm theo key thay vì duyệt mảng, hoặc dùng useMemo trong React để tránh tính toán lại khi dữ liệu không thay đổi
+
 # Cách debug
 
 Cách nhớ ngắn gọn
