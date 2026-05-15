@@ -164,6 +164,16 @@ Nếu hợp lệ, <Outlet/> sẽ render component con là <Profile />
 
 Trick giúp tăng tốc độ truy xuất bộ nhớ là các kỹ thuật giúp lấy dữ liệu nhanh hơn và tránh xử lý lặp lại không cần thiết. Ví dụ dùng cache, dùng Map/Object để tìm kiếm theo key thay vì duyệt mảng, hoặc dùng useMemo trong React để tránh tính toán lại khi dữ liệu không thay đổi
 
+### Hiểu về useContext
+
+Dùng useContext cho authentication vì trạng thái đăng nhập cần được dùng ở nhiều nơi như route, header, profile và logout...Context giúp tránh truyền props qua nhiều tầng và quản lý auth tập trung hơn. Ưu điểm là đơn giản, dễ dùng cho app.
+
+`Cách nhớ nhanh`
+useContext = chia sẻ auth state toàn app
+localStorage/cookie = lưu token sau khi reload
+ProjectedRoute = chặn trang cần login
+RejectedRoute = chặn user đã login vào login/register
+
 # Cách debug
 
 Cách nhớ ngắn gọn
