@@ -1,23 +1,27 @@
 import { useForm } from 'react-hook-form'
-import { data, Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Input from '../../components/Input'
 import { schema, type Schema } from '../../utils/rules'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation } from '@tanstack/react-query'
 import { login } from '../../apis/auth.api'
 import { isAxiosUnprocessableEntityError } from '../../utils/utils'
-import type { ResponseApi } from '../../types/utils.type'
+import type { ErrorResponse } from '../../types/utils.type'
+import { useContext } from 'react'
+import { AppContext } from '../../contexts/app.context'
 
 type FormData = Omit<Schema, 'confirm_password'>
 const loginSchema = schema.omit(['confirm_password'])
 
 export default function Login() {
+  const { setIsAuthenticated } = useContext(AppContext)
+  const navigate = useNavigate()
+
   const {
     register,
     setError,
     handleSubmit,
-    formState: { errors },
-    watch
+    formState: { errors }
   } = useForm<FormData>({
     resolver: yupResolver(loginSchema)
   })
@@ -29,11 +33,13 @@ export default function Login() {
   const onSubmit = handleSubmit((data) => {
     console.log('data login', data)
     loginMutation.mutate(data, {
-      onSuccess: (data) => {
-        console.log('Đăng nhập thành công', data)
+      onSuccess: () => {
+        setIsAuthenticated(true)
+        navigate('/')
       },
+
       onError: (error) => {
-        if (isAxiosUnprocessableEntityError<ResponseApi<FormData>>(error)) {
+        if (isAxiosUnprocessableEntityError<ErrorResponse<FormData>>(error)) {
           const formError = error.response?.data.data
           console.log('formError', formError)
           if (formError) {
@@ -48,9 +54,6 @@ export default function Login() {
       }
     })
   })
-
-  const value = watch()
-  console.log('value', value)
 
   return (
     <div className='bg-orange'>
