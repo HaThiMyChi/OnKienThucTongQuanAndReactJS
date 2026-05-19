@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form'
+import { set, useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { getRules } from '../../utils/rules'
 import Input from '../../components/Input'
@@ -17,7 +17,7 @@ type FormData = Schema
 
 export default function Register() {
   // Hook này lấy giá trị từ Context (object được cung cấp bởi AppProvider)
-  const { setIsAuthenticated } = useContext(AppContext)
+  const { setIsAuthenticated, setProfile } = useContext(AppContext)
   const navigate = useNavigate()
 
   // watch() lắng nghe formState này
@@ -47,8 +47,9 @@ export default function Register() {
   const onSubmit = handleSubmit((data) => {
     const body = omit(data, ['confirm_password'])
     registerAccountMutation.mutate(body, {
-      onSuccess() {
+      onSuccess(data) {
         setIsAuthenticated(true)
+        setProfile(data.data.data.user)
         navigate('/')
       },
       onError(error) {

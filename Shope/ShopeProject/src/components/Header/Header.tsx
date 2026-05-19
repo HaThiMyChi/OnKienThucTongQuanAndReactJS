@@ -4,14 +4,16 @@ import { useContext } from 'react'
 import { AppContext } from '../../contexts/app.context'
 import { useMutation } from '@tanstack/react-query'
 import { logout } from '../../apis/auth.api'
+import path from '../../constants/path'
 
 export default function Header() {
-  const { setIsAuthenticated, isAuthenticated } = useContext(AppContext)
+  const { setIsAuthenticated, isAuthenticated, setProfile, profile } = useContext(AppContext)
 
   const logoutMutation = useMutation({
     mutationFn: logout,
     onSuccess: () => {
       setIsAuthenticated(false)
+      setProfile(null)
     }
   })
 
@@ -24,7 +26,7 @@ export default function Header() {
       <div className='container'>
         <div className='flex justify-end'>
           <Popover
-            className='flex cursor-pointer items-center py-1 hover:text-gray-300'
+            className='flex cursor-pointer items-center py-1 hover:text-white/70'
             renderPopover={
               <div className='relative rounded-sm border border-gray-200 bg-white shadow-md'>
                 <div className='flex flex-col py-2 pl-3 pr-28'>
@@ -62,11 +64,11 @@ export default function Header() {
           </Popover>
           {isAuthenticated && (
             <Popover
-              className='ml-6 flex cursor-pointer items-center py-1 hover:text-gray-300'
+              className='ml-6 flex cursor-pointer items-center py-1 hover:text-white/70'
               renderPopover={
                 <div className='relative rounded-sm border border-gray-200 bg-white shadow-md'>
                   <Link
-                    to='/profile'
+                    to={path.profile}
                     className='block w-full bg-white px-4 py-3 text-left hover:bg-slate-100 hover:text-cyan-500'
                   >
                     Tài khoản của tôi
@@ -93,17 +95,17 @@ export default function Header() {
                   className='h-full w-full rounded-full object-cover'
                 />
               </div>
-              <div>duthanhduoc</div>
+              <div>{profile?.email}</div>
             </Popover>
           )}
 
           {!isAuthenticated && (
             <div className='flex items-center'>
-              <Link to='/register' className='mx-3 capitalize hover:text-white/70'>
+              <Link to={path.register} className='mx-3 capitalize hover:text-white/70'>
                 Đăng ký
               </Link>
               <div className='h-4 border-r-[1px] border-r-white/40' />
-              <Link to='/login' className='mx-3 capitalize hover:text-white/70'>
+              <Link to={path.login} className='mx-3 capitalize hover:text-white/70'>
                 Đăng nhập
               </Link>
             </div>

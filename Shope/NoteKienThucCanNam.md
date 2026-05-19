@@ -174,6 +174,51 @@ localStorage/cookie = lưu token sau khi reload
 ProjectedRoute = chặn trang cần login
 RejectedRoute = chặn user đã login vào login/register
 
+# JSON.stringify vs JSON.parse
+
+JSON.stringify — Khi bạn cần chuyển object/array thành string:
+
+- Gửi dữ liệu lên server (API request body)
+- Lưu dữ liệu vào LocalStorage/SessionStorage
+- Ghi dữ liệu vào file
+- Log dữ liệu để debug
+- Truyền dữ liệu qua postMessage
+
+```ts
+const user = { name: "John", age: 30 };
+const jsonString = JSON.stringify(user);
+// Kết quả: '{"name":"John","age":30}'
+
+// Gửi lên API
+fetch("/api/users", {
+  method: "POST",
+  body: JSON.stringify(user), // ← dùng stringify
+});
+```
+
+JSON.parse - Khi bạn cần chuyển string thành object/array
+
+- Nhận dữ liệu từ API response
+- Đọc dữ liệu từ LocalStorage/SessionStorage
+- Đọc dữ liệu từ file (string format)
+- Nhận dữ liệu từ postMessage
+
+```ts
+const jsonString = '{"name":"John","age":30}';
+const user = JSON.parse(jsonString);
+// Kết quả: { name: 'John', age: 30 }
+
+// Nhận từ API
+const response = await fetch("/api/users");
+const data = await response.json(); // .json() tự động parse
+// hoặc: JSON.parse(await response.text()) ← dùng parse
+```
+
+Quy tắc nhớ:
+
+- stringify: Object → String (khi cần gửi/lưu)
+- parse: String -> Object (khi cần sử dụng)
+
 # Cách debug
 
 Cách nhớ ngắn gọn
@@ -181,3 +226,7 @@ Bị nhảy vào file .js lạ → bấm Shift + F11 để thoát ra
 Không muốn nhảy vào hàm con → bấm F10
 Muốn chạy tới breakpoint tiếp theo → bấm F5
 Chỉ muốn vào hàm mình tự viết → bấm F11
+
+```
+
+```
