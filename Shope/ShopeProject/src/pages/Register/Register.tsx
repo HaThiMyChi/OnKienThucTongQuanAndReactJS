@@ -4,7 +4,7 @@ import { getRules } from '../../utils/rules'
 import Input from '../../components/Input'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { schema, type Schema } from '../../utils/rules'
-import { registerAccount } from '../../apis/auth.api'
+import authApi from '../../apis/auth.api'
 import { useMutation } from '@tanstack/react-query'
 import omit from 'lodash/omit'
 import { isAxiosUnprocessableEntityError } from '../../utils/utils'
@@ -38,7 +38,7 @@ export default function Register() {
   // confirm_password chỉ dùng ở frontend để validate password nhập lại có khớp hay không. Sau khi validate xong, mình không cần gửi confirm_password lên backend, nên dùng omit để remove field này trước khi call API.
 
   const registerAccountMutation = useMutation({
-    mutationFn: (body: Omit<FormData, 'confirm_password'>) => registerAccount(body)
+    mutationFn: (body: Omit<FormData, 'confirm_password'>) => authApi.registerAccount(body)
   })
 
   // Về data trong handleSubmit(data):

@@ -219,6 +219,10 @@ Quy tắc nhớ:
 - stringify: Object → String (khi cần gửi/lưu)
 - parse: String -> Object (khi cần sử dụng)
 
+# Object.fromEntries(searchParams) làm gì?
+
+Nó chuyển từ URLSearchParams sang object thường
+
 # Cách debug
 
 Cách nhớ ngắn gọn
