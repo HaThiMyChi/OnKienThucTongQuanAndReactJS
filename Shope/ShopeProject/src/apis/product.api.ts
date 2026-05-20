@@ -1,4 +1,4 @@
-import { Product, ProductList, ProductListConfig } from '../types/product.type'
+import type { Product, ProductList, ProductListConfig } from '../types/product.type'
 import type { SuccessResponse } from '../types/utils.type'
 import http from '../utils/http'
 
