@@ -223,6 +223,38 @@ Quy tắc nhớ:
 
 Nó chuyển từ URLSearchParams sang object thường
 
+# omitBy trong lodash
+
+omitBy thường là hàm của lodash, dùng để loại bỏ các field không cần thiết trong object query
+
+Cú pháp:
+
+omitBy(object, predicate)
+Nghĩa là: Duyệt qua từng field trong object. Nếu field nào thỏa điều kiện predicate thì loại bỏ field đó.
+
+```ts
+import omitBy from "lodash/omitBy";
+import isUndefined from "lodash/isUndefined";
+
+const query = {
+  page: "1",
+  limit: "30",
+  name: undefined,
+  sort_by: "price",
+};
+
+const result = omitBy(query, isUndefined);
+
+console.log(result);
+```
+
+Kết quả:
+{
+page: '1',
+limit: '30',
+sort_by: 'price'
+}
+
 # Cách debug
 
 Cách nhớ ngắn gọn
