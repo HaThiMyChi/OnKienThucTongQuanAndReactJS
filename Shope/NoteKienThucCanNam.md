@@ -255,6 +255,15 @@ limit: '30',
 sort_by: 'price'
 }
 
+### Cách hiểu filter category
+
+Tổng kết luồng hoạt động:
+Giao diện AsideFilter: Thay đổi URL.
+ProductList: Đọc URL tạo ra QueryConfig.
+React Query: Thấy QueryConfig thay đổi -> Tự động gọi API.
+API: Gửi tham số lên Server.
+Server: Lọc dữ liệu và trả về cho client
+
 # Cách debug
 
 Cách nhớ ngắn gọn
