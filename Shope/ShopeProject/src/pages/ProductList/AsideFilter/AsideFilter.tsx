@@ -10,7 +10,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import InputNumber from '../../../components/InputNumber'
 import RatingStars from '../RatingStars'
-
+import { omit } from 'lodash'
 interface Props {
   queryConfig: QueryConfig
   categories: Category[]
@@ -35,6 +35,7 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
     handleSubmit,
     watch,
     trigger,
+    reset,
     formState: { errors }
   } = useForm<FormData>({
     defaultValues: {
@@ -59,6 +60,14 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
       }).toString()
     })
   })
+
+  const handleRemoveAll = () => {
+    reset()
+    navigate({
+      pathname: path.home,
+      search: createSearchParams(omit(queryConfig, ['price_min', 'price_max', 'rating_filter', 'category'])).toString()
+    })
+  }
 
   return (
     <div className='py-4'>
@@ -190,7 +199,10 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
       <div className='text-sm'>Đánh giá</div>
       <RatingStars queryConfig={queryConfig} />
       <div className='my-4 h-[1px] bg-gray-300' />
-      <Button className='flex w-full items-center justify-center bg-orange p-2 text-sm uppercase text-white hover:bg-orange/80'>
+      <Button
+        className='flex w-full items-center justify-center bg-orange p-2 text-sm uppercase text-white hover:bg-orange/80'
+        onClick={handleRemoveAll}
+      >
         Xóa tất cả
       </Button>
     </div>
