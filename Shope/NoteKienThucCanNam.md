@@ -264,6 +264,19 @@ React Query: Thấy QueryConfig thay đổi -> Tự động gọi API.
 API: Gửi tham số lên Server.
 Server: Lọc dữ liệu và trả về cho client
 
+### Omit và Pick đều dùng để tạo type mới từ type có sẵn
+
+- Omit: lấy tất cả, bỏ vài field (khi nào dùng: type gốc có nhiều field, chỉ cần bỏ ít field)
+- Pick: Chỉ lấy field được chọn (khi nào dùng: Chỉ muốn lấy một số field cụ thể)
+
+### Giải thích code trong component InputNumber
+
+1. Tại sao dùng Controller và {...field}?
+   Vì InputNumber là một Custom Component (không phải thẻ <input /> thuần của HTML), React Hook Form không thể dùng hàm register bình thường để "chọc" vào bên trong lấy giá trị hay điều khiển DOM được.
+
+Controller: Đóng vai trò là "người phiên dịch". nó lắng nghe state của form và truyền xuống cho component của bạn.
+{...field}: Trong object field này có chứa: onChange, onBlur, value, name và đặc biệt là ref. Khi bạn viết {...field}, bạn đang truyền cái ref của React Hook Form vào InputNumber.
+
 # Cách debug
 
 Cách nhớ ngắn gọn

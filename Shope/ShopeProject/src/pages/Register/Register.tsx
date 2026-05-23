@@ -13,7 +13,8 @@ import { AppContext } from '../../contexts/app.context'
 import { useContext } from 'react'
 import Button from '../../components/Button'
 
-type FormData = Schema
+type FormData = Pick<Schema, 'email' | 'password' | 'confirm_password'>
+const registerSchema = schema.pick(['email', 'password', 'confirm_password'])
 
 export default function Register() {
   // Hook này lấy giá trị từ Context (object được cung cấp bởi AppProvider)
@@ -29,7 +30,7 @@ export default function Register() {
     setError,
     formState: { errors }
   } = useForm<FormData>({
-    resolver: yupResolver(schema)
+    resolver: yupResolver(registerSchema)
   })
 
   // const rules = getRules(getValues)
