@@ -1,8 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import type { Product as ProductType } from '../../../types/product.type'
-import { formatCurrency, formatNumberToSocialStyle } from '../../../utils/utils'
-import ProductRaiting from '../../../components/ProductRaiting'
+import type { Product as ProductType } from '../../../../types/product.type'
+import { formatCurrency, formatNumberToSocialStyle } from '../../../../utils/utils'
+import ProductRaiting from '../../../../components/ProductRaiting'
 interface Props {
   product: ProductType
 }
