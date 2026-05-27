@@ -23,3 +23,5 @@ export function formatNumberToSocialStyle(value: number) {
     .replace('.', ',')
     .toLowerCase()
 }
+
+export const rateSale = (original: number, scale: number) => Math.round((original - scale) / original) * 100 + '%'
