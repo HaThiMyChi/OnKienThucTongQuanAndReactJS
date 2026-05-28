@@ -38,6 +38,8 @@ export const generateNameId = ({ name, id }: { name: string; id: string }) => {
   return removeSpecialCharacter(name).replace(/\s/g, '-') + `-i-${id}`
 }
 
+// 1. Dùng .split('-i-') để cắt chuỗi NameId thành một mảng gồm 2 phần dựa vào ký tự mốc là -i-.
+// 2. Trả về phần tử cuối cùng của mảng (arr[arr.length - 1]), chính là ID bạn cần.
 export const getIdFromNameId = (nameId: string) => {
   const arr = nameId.split('-i-')
   return arr[arr.length - 1]
