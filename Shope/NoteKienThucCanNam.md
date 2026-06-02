@@ -277,6 +277,24 @@ Server: Lọc dữ liệu và trả về cho client
 Controller: Đóng vai trò là "người phiên dịch". nó lắng nghe state của form và truyền xuống cho component của bạn.
 {...field}: Trong object field này có chứa: onChange, onBlur, value, name và đặc biệt là ref. Khi bạn viết {...field}, bạn đang truyền cái ref của React Hook Form vào InputNumber.
 
+# Hiểu về useQuery và useMutation
+
+useQuery = lấy dữ liệu
+useMutation = thay đổi dữ liệu
+
+useMutation có lợi vì:
+
+- Chủ động gọi API khi user hành động
+- Có sẵn loading/error/success
+- Dễ xử lý onSuccess/onError
+- Dễ cập nhật lại cache bằng invalidateQueries
+- Code sạch hơn so với tự quản lý state
+
+# queryClient.invalidateQueries
+
+Dùng để báo cho React Query biết data trong cache đã cũ, cần fetch lại dữ liệu mới từ server
+Ex: invalidateQueries = làm mới lại data của useQuery
+
 # Cách debug
 
 Cách nhớ ngắn gọn

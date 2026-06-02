@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import productApi from '../../apis/product.api'
@@ -9,9 +9,13 @@ import DOMPurify from 'dompurify'
 import type { Product as ProductType, ProductListConfig } from '../../types/product.type'
 import Product from '../ProductList/components/Product'
 import QuantityController from '../../components/QuantityController'
+import purchaseApi from '../../apis/purchase.api'
+import { toast } from 'react-toastify'
+import { purchasesStatus } from '../../constants/purchase'
 
 export default function ProductDetail() {
-  const [buyCount, setBuyCont] = useState(1)
+  const queryClient = useQueryClient()
+  const [buyCount, setBuyCount] = useState(1)
 
   const { nameId } = useParams()
   console.log('nameId', nameId)
@@ -50,7 +54,10 @@ export default function ProductDetail() {
     enabled: Boolean(product)
   })
 
-  console.log('productsData', productsData)
+  // console.log('productsData', productsData)
+  const addToCartMutation = useMutation({
+    mutationFn: (body: { product_id: string; buy_count: number }) => purchaseApi.addToCart(body)
+  })
 
   useEffect(() => {
     if (product && product.images.length > 0) {
@@ -82,7 +89,6 @@ export default function ProductDetail() {
     // can biet khung hinh dang hien thi nam o dau tren trinh duyet va kich thuoc cua no la bao nhieu
     // rect sẽ cho chúng ta biết width, height, và tọa độ x, y của khung chứa ảnh.
     const rect = event.currentTarget.getBoundingClientRect()
-    console.log('rect image', rect)
 
     const image = imageRef.current as HTMLImageElement
 
@@ -110,7 +116,25 @@ export default function ProductDetail() {
   }
 
   const handleBuyCount = (value: number) => {
-    setBuyCont(value)
+    setBuyCount(value)
+  }
+
+  const addToCart = () => {
+    addToCartMutation.mutate(
+      {
+        buy_count: buyCount,
+        product_id: product?._id as string
+      },
+      {
+        onSuccess: (data) => {
+          toast.success(data.data.message, {
+            autoClose: 1000
+          })
+          // Kích hoạt làm mới dữ liệu cho query purchases có status là inCart để cập nhật lại số lượng sản phẩm trong giỏ hàng ở header.
+          queryClient.invalidateQueries({ queryKey: ['purchases', { status: purchasesStatus.inCart }] })
+        }
+      }
+    )
   }
 
   if (!product) return null
@@ -217,7 +241,10 @@ export default function ProductDetail() {
                 <div className='ml-6 text-sm text-gray-500'>{product.quantity} sản phẩm có sẵn</div>
               </div>
               <div className='mt-8 flex items-center'>
-                <button className='flex h-12 items-center justify-center rounded-sm border border-orange bg-orange/10 px-5 capitalize text-orange shadow-sm hover:bg-orange/5'>
+                <button
+                  onClick={addToCart}
+                  className='flex h-12 items-center justify-center rounded-sm border border-orange bg-orange/10 px-5 capitalize text-orange shadow-sm hover:bg-orange/5'
+                >
                   <svg
                     enableBackground='new 0 0 15 15'
                     viewBox='0 0 15 15'
@@ -254,7 +281,7 @@ export default function ProductDetail() {
       </div>
       <div className='mt-8'>
         <div className='container'>
-          <div className='mt-8 bg-white p-4 shadow'>
+          <div className=' bg-white p-4 shadow'>
             <div className='rounded bg-gray-50 p-4 text-lg capitalize text-slate-700'>Mô tả sản phẩm</div>
             <div className='mx-4 mb-4 mt-12 text-sm leading-loose'>
               <div
