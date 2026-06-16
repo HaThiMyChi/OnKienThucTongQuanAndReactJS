@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { purchasesStatus } from '../../constants/purchase'
 import purchaseApi from '../../apis/purchase.api'
 import { Link } from 'react-router-dom'
@@ -8,7 +8,8 @@ import path from '../../constants/path'
 import QuantityController from '../../components/QuantityController'
 import Button from '../../components/Button'
 import type { Purchase } from '../../types/purchase.type'
-
+import { produce } from 'immer'
+import { keyBy } from 'lodash'
 interface ExtendedPurchase extends Purchase {
   disabled: boolean
   checked: boolean
@@ -16,9 +17,16 @@ interface ExtendedPurchase extends Purchase {
 export default function Cart() {
   const [extendedPurchases, setExtendedPurchases] = useState<ExtendedPurchase[]>([])
 
-  const { data: purchasesInCartData } = useQuery({
+  const { data: purchasesInCartData, refetch } = useQuery({
     queryKey: ['purchases', { status: purchasesStatus.inCart }],
     queryFn: () => purchaseApi.getPurchases({ status: purchasesStatus.inCart })
+  })
+
+  const updatePurchaseMutation = useMutation({
+    mutationFn: purchaseApi.updatePurchase,
+    onSuccess: () => {
+      refetch()
+    }
   })
 
   const purchasesInCart = purchasesInCartData?.data.data
@@ -28,19 +36,22 @@ export default function Cart() {
   console.log('isAllChecked', isAllChecked)
 
   useEffect(() => {
-    setExtendedPurchases(
-      purchasesInCart?.map((purchase) => ({
-        ...purchase, // Giũ nguyên data từ API
-        disabled: false, //  // Thêm property disabled, checked
-        checked: false
-      })) || []
-    )
+    setExtendedPurchases((prev) => {
+      const extendedPurchasesObject = keyBy(prev, '_id')
+      return (
+        purchasesInCart?.map((purchase) => ({
+          ...purchase,
+          disabled: false,
+          checked: Boolean(extendedPurchasesObject?.[purchase._id]?.checked) || false
+        })) || []
+      )
+    })
   }, [purchasesInCart])
 
-  const handleCheck = (productIndex: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCheck = (purchaseIndex: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setExtendedPurchases((prev) =>
       prev.map((purchase, index) =>
-        index === productIndex ? { ...purchase, checked: event.target.checked } : purchase
+        index === purchaseIndex ? { ...purchase, checked: event.target.checked } : purchase
       )
     )
   }
@@ -52,6 +63,28 @@ export default function Cart() {
         checked: !isAllChecked // Toggle checked (false→true hoặc true→false)
       }))
     )
+  }
+
+  const handleTypeQuantity = (purchaseIndex: number) => (value: number) => {
+    setExtendedPurchases(
+      produce((draft) => {
+        draft[purchaseIndex].buy_count = value
+      })
+    )
+  }
+
+  const handleQuantity = (purchaseIndex: number, value: number, enabled: boolean) => {
+    if (enabled) {
+      const purchase = extendedPurchases[purchaseIndex]
+      // Cập nhật UI ngay lập tức
+      setExtendedPurchases(
+        produce((draft) => {
+          draft[purchaseIndex].disabled = true // Vô hiệu hóa điều khiển số lượng
+        })
+      )
+      // Gọi API để cập nhật số lượng
+      updatePurchaseMutation.mutate({ product_id: purchase.product._id, buy_count: value })
+    }
   }
 
   return (
@@ -139,6 +172,19 @@ export default function Cart() {
                           max={purchase.product.quantity}
                           value={purchase.buy_count}
                           classNameWrapper='flex items-center'
+                          onIncrease={(value) => handleQuantity(index, value, value <= purchase.product.quantity)}
+                          onDecrease={(value) => handleQuantity(index, value, value >= 1)}
+                          onType={handleTypeQuantity(index)}
+                          onFocusOut={(value) =>
+                            handleQuantity(
+                              index,
+                              value,
+                              value >= 1 &&
+                                value <= purchase.product.quantity &&
+                                value !== (purchasesInCart as Purchase[])[index].buy_count
+                            )
+                          }
+                          disabled={purchase.disabled}
                         />
                       </div>
                       <div className='col-span-1'>
