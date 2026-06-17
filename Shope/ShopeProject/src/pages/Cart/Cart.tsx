@@ -37,6 +37,14 @@ export default function Cart() {
     }
   })
 
+  const buyProductsMutation = useMutation({
+    mutationFn: purchaseApi.buyProducts,
+    onSuccess: (data) => {
+      refetch()
+      toast.success(data.data.message, { position: 'top-center', autoClose: 1000 })
+    }
+  })
+
   const purchasesInCart = purchasesInCartData?.data.data
   console.log('purchasesInCart', purchasesInCart)
 
@@ -44,6 +52,15 @@ export default function Cart() {
   console.log('isAllChecked', isAllChecked)
 
   const checkedPurchases = extendedPurchases.filter((purchase) => purchase.checked)
+
+  const checkedPurchasesCount = checkedPurchases.length
+  const totalCheckedPurchasesPrice = checkedPurchases.reduce((result, current) => {
+    return result + current.product.price * current.buy_count
+  }, 0)
+
+  const totalCheckedPurchaseSavingPrice = checkedPurchases.reduce((result, current) => {
+    return result + (current.product.price_before_discount - current.product.price) * current.buy_count
+  }, 0)
 
   useEffect(() => {
     setExtendedPurchases((prev) => {
@@ -107,6 +124,16 @@ export default function Cart() {
   const handleDeleteManyPurchases = () => {
     const purchaseIds = checkedPurchases.map((purchase) => purchase._id)
     deletePurchasesMutation.mutate(purchaseIds)
+  }
+
+  const handleBuyPurchases = () => {
+    if (checkedPurchases.length > 0) {
+      const body = checkedPurchases.map((purchase) => ({
+        product_id: purchase.product._id,
+        buy_count: purchase.buy_count
+      }))
+      buyProductsMutation.mutate(body)
+    }
   }
 
   return (
@@ -252,15 +279,19 @@ export default function Cart() {
           <div className='mt-5 flex flex-col sm:ml-auto sm:mt-0 sm:flex-row sm:items-center'>
             <div>
               <div className='flex items-center sm:justify-end'>
-                <div>Tổng thanh toán (0 sản phẩm):</div>
-                <div className='ml-2 text-2xl text-orange'>₫138000</div>
+                <div>Tổng thanh toán ({checkedPurchasesCount} sản phẩm):</div>
+                <div className='ml-2 text-2xl text-orange'>₫{formatCurrency(totalCheckedPurchasesPrice)}</div>
               </div>
               <div className='flex items-center text-sm sm:justify-end'>
                 <div className='text-gray-500'>Tiết kiệm</div>
-                <div className='ml-6 text-orange'>₫138000</div>
+                <div className='ml-6 text-orange'>₫{formatCurrency(totalCheckedPurchaseSavingPrice)}</div>
               </div>
             </div>
-            <Button className='mt-5 flex h-10 w-52 items-center justify-center bg-red-500 text-sm uppercase text-white hover:bg-red-600 sm:ml-4 sm:mt-0'>
+            <Button
+              className='mt-5 flex h-10 w-52 items-center justify-center bg-red-500 text-sm uppercase text-white hover:bg-red-600 sm:ml-4 sm:mt-0'
+              onClick={handleBuyPurchases}
+              disabled={buyProductsMutation.isPending || checkedPurchases.length === 0}
+            >
               Mua hàng
             </Button>
           </div>
