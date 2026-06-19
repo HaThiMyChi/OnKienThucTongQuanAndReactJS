@@ -295,6 +295,33 @@ useMutation có lợi vì:
 Dùng để báo cho React Query biết data trong cache đã cũ, cần fetch lại dữ liệu mới từ server
 Ex: invalidateQueries = làm mới lại data của useQuery
 
+# Hiểu cách thực thi thực tế với AppContext
+
+1. AppProvider render (app.context.tsx)
+   ↓
+2. Tạo state: isAuthenticated, profile, reset function
+   ↓
+3. App render
+   ↓
+4. App useEffect chạy → addEventListener('clearLS', reset)
+
+## Cách hiểu luồng chạy trong App.tsx
+
+App render
+→ useRouteElements tạo routes
+→ useContext lấy reset từ AppContext
+→ useEffect đăng ký effect
+→ return JSX
+→ UI hiển thị routeElements và ToastContainer
+→ sau render, useEffect chạy
+→ addEventListener clearLS với reset
+
+Nói ngắn gọn:
+
+useContext lấy reset trước.
+Sau đó useEffect dùng reset để đăng ký listener.
+Nhưng code bên trong useEffect chỉ chạy sau khi render xong.
+
 # Cách debug
 
 Cách nhớ ngắn gọn
