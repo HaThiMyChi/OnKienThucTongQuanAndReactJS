@@ -29,6 +29,21 @@ function App() {
     }
   }, [reset])
 
+  // Listen khi xóa token từ DevTools hoặc tab khác
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'access_token' && !e.newValue) {
+        // Token bị xóa
+        reset()
+      }
+    }
+    window.addEventListener('storage', handleStorageChange)
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+    }
+  }, [reset])
+
   return (
     <div>
       {routeElements}
