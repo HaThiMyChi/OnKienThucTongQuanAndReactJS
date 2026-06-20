@@ -1,4 +1,3 @@
-import Profile from '../pages/Profile'
 import type { User } from '../types/user.type'
 
 export const LocalStorageEventTarget = new EventTarget()
@@ -24,6 +23,6 @@ export const getProfileFromLS = () => {
   return result ? JSON.parse(result) : null
 }
 
-export const setProfileToLS = (Profile: User) => {
-  localStorage.setItem('profile', JSON.stringify(Profile))
+export const setProfileToLS = (profile: User) => {
+  localStorage.setItem('profile', JSON.stringify(profile))
 }
