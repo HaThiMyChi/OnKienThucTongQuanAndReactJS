@@ -7,7 +7,10 @@ import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import InputNumber from '../../../../components/InputNumber'
 import DateSelect from '../../components/DateSelect/DateSelect'
-import { useEffect } from 'react'
+import { useContext, useEffect } from 'react'
+import { AppContext } from '../../../../contexts/app.context'
+import { toast } from 'react-toastify'
+import { setProfileToLS } from '../../../../utils/auth'
 
 type FormData = Pick<UserSchema, 'name' | 'address' | 'phone' | 'date_of_birth' | 'avatar'>
 
@@ -15,14 +18,17 @@ type FormData = Pick<UserSchema, 'name' | 'address' | 'phone' | 'date_of_birth' 
 const profileSchema = userSchema.pick(['name', 'address', 'phone', 'date_of_birth', 'avatar'])
 
 export default function Profile() {
-  const { data: profileData } = useQuery({
+  const { setProfile } = useContext(AppContext)
+  const { data: profileData, refetch } = useQuery({
     queryKey: ['profile'],
     queryFn: userApi.getProfile
   })
 
   const profile = profileData?.data.data
 
-  const updateProfileMutation = useMutation(userApi.updateProfile)
+  const updateProfileMutation = useMutation({
+    mutationFn: userApi.updateProfile
+  })
 
   const {
     register,
@@ -53,9 +59,24 @@ export default function Profile() {
     }
   }, [profile, setValue])
 
-  const onSubmit = handleSubmit(async (data) => {
-    console.log('data', data)
-  })
+  const onSubmit = async (data: FormData) => {
+    try {
+      console.log('data', data)
+      const res = await updateProfileMutation.mutateAsync({
+        ...data,
+        date_of_birth: data.date_of_birth?.toISOString()
+      })
+
+      console.log('res profile', res)
+      setProfile(res.data.data)
+      setProfileToLS(res.data.data)
+      refetch()
+      toast.success(res.data.message)
+    } catch (error: any) {
+      console.error('Update error:', error)
+      toast.error(error?.response?.data?.message || 'Cập nhật thất bại')
+    }
+  }
 
   const value = watch()
   console.log('value and errors', value, errors)
@@ -67,7 +88,7 @@ export default function Profile() {
         <div className='mt-1 text-sm text-gray-700'>Quản lý thông tin hồ sơ để bảo mật tài khoản</div>
       </div>
 
-      <form className='mt-8 flex flex-col-reverse md:flex-row md:items-start' onSubmit={onSubmit}>
+      <form className='mt-8 flex flex-col-reverse md:flex-row md:items-start' onSubmit={handleSubmit(onSubmit)}>
         <div className='mt-6 flex-grow md:mt-0 md:pr-12'>
           <div className='flex flex-col flex-wrap sm:flex-row'>
             <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right'>Email</div>
@@ -129,7 +150,7 @@ export default function Profile() {
             <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right' />
             <div className='sm:w-[80%] sm:pl-5'>
               <Button
-                className='flex h-9 items-center bg-orange px-5 text-center text-sm text-white hover:bg-orange/80'
+                className='flex h-9 items-center rounded-sm bg-orange px-5 text-center text-sm text-white hover:bg-orange/80'
                 type='submit'
               >
                 Lưu
