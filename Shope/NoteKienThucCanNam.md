@@ -322,6 +322,24 @@ useContext lấy reset trước.
 Sau đó useEffect dùng reset để đăng ký listener.
 Nhưng code bên trong useEffect chỉ chạy sau khi render xong.
 
+## cách hiểu khi tách component
+
+Nếu onChange nằm trong Props → cha truyền xuống con.
+
+Nếu trong con có onChange(value) → con gọi hàm đó để gửi value ngược lên cha.
+
+Nếu onChange nằm trên thẻ input → đó là event của HTML input.
+
+(Hiểu theo tiếng việt)
+Cha đưa cho con một cái remote.
+Con bấm remote.
+Cha nhận tín hiệu và tự đổi state.
+
+React vẫn là một chiều:
+
+State đi từ cha xuống con.
+Event đi từ con gọi ngược lên cha thông qua callback.
+
 # Cách debug
 
 Cách nhớ ngắn gọn

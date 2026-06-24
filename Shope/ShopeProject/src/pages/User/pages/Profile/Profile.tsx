@@ -14,6 +14,7 @@ import { setProfileToLS } from '../../../../utils/auth'
 import { getAvatarUrl, isAxiosUnprocessableEntityError } from '../../../../utils/utils'
 import type { ErrorResponse } from '../../../../types/utils.type'
 import config from '../../../../constants/config'
+import InputFile from '../../../../components/InputFile/InputFile'
 
 type FormData = Pick<UserSchema, 'name' | 'address' | 'phone' | 'date_of_birth' | 'avatar'>
 
@@ -33,8 +34,6 @@ const profileSchema = userSchema.pick(['name', 'address', 'phone', 'date_of_birt
 // Nhấn submit thì tiến hành upload lên server, nếu upload thành công thì tiến hành gọi api updateProfile
 
 export default function Profile() {
-  const fileInputRef = useRef<HTMLInputElement>(null)
-
   const { setProfile } = useContext(AppContext)
 
   const [file, setFile] = useState<File>()
@@ -131,20 +130,9 @@ export default function Profile() {
   const value = watch()
   // console.log('value and errors', value, errors)
 
-  const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const fileFromLocal = event.target.files?.[0]
-    // setFile(fileFromLocal)
-    if (fileFromLocal && (fileFromLocal.size >= config.maxSizeUploadAvatar || !fileFromLocal.type.includes('image'))) {
-      toast.error(`Dung lượng file tối đa 1MB. Định dạng: .JPEG, .PNG`, {
-        position: 'top-center'
-      })
-    } else {
-      setFile(fileFromLocal)
-    }
-  }
-
-  const handleUpload = () => {
-    fileInputRef.current?.click()
+  const handleChangeFile = (file?: File) => {
+    console.log('file fileFromLocal', file)
+    setFile(file)
   }
 
   return (
@@ -235,24 +223,9 @@ export default function Profile() {
                 className='h-full w-full rounded-full object-cover'
               />
             </div>
-            <input
-              className='hidden'
-              type='file'
-              accept='.jpg,.jpeg,.png'
-              ref={fileInputRef}
-              onChange={onFileChange}
-              onClick={(event) => {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                ;(event.target as any).value = null
-              }}
-            />
-            <button
-              className='flex h-10 items-center justify-end rounded-sm border bg-white px-6 text-sm text-gray-600 shadow-sm'
-              type='button'
-              onClick={handleUpload}
-            >
-              Chọn ảnh
-            </button>
+
+            <InputFile onChange={handleChangeFile} />
+
             <div className='mt-3 text-gray-400'>
               <div>Dụng lượng file tối đa 1 MB</div>
               <div>Định dạng:.JPEG, .PNG</div>
