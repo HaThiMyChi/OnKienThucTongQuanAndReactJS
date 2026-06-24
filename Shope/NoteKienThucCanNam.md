@@ -340,6 +340,12 @@ React vẫn là một chiều:
 State đi từ cha xuống con.
 Event đi từ con gọi ngược lên cha thông qua callback.
 
+## useForm, FormProvider, useFormContext
+
+- useForm dùng componentcha/form chính -> tác dụng tạo và quản lý form
+- FormProvider dùng bọc quanh form -> tác dụng cung cấp form methods cho component con
+- useFormContext dùng component con -> Tác dụng lấy form methods từ FormProvider (Component con lấy register/control/errors/setValue/watch mà không cần nhận props.)
+
 # Cách debug
 
 Cách nhớ ngắn gọn
