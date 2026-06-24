@@ -47,4 +47,14 @@ export const getIdFromNameId = (nameId: string) => {
   return arr[arr.length - 1]
 }
 
-export const getAvatarUrl = (avatarName?: string) => (avatarName ? `${config.baseUrl}images/${avatarName}` : userImage)
+// export const getAvatarUrl = (avatarName?: string) => (avatarName ? `${config.baseUrl}images/${avatarName}` : userImage)
+
+export const getAvatarUrl = (avatarName?: string | null) => {
+  if (!avatarName) return userImage
+
+  if (avatarName.startsWith('http')) {
+    return avatarName
+  }
+
+  return `${config.baseUrl}images/${avatarName}`
+}
