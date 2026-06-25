@@ -343,8 +343,18 @@ Event đi từ con gọi ngược lên cha thông qua callback.
 ## useForm, FormProvider, useFormContext
 
 - useForm dùng componentcha/form chính -> tác dụng tạo và quản lý form
-- FormProvider dùng bọc quanh form -> tác dụng cung cấp form methods cho component con
+- FormProvider dùng bọc quanh form -> tác dụng cung cấp form methods cho component con (chứa toàn bộ methods của form)
 - useFormContext dùng component con -> Tác dụng lấy form methods từ FormProvider (Component con lấy register/control/errors/setValue/watch mà không cần nhận props.)
+
+### Khi nào nên dùng FormProvider và useFormContext?
+
+Dùng khi form của bạn lớn và bị tách thành nhiều component con
+Kết luận dễ nhớ:
+useForm = tạo form ở cha.
+
+FormProvider = chia sẻ form xuống các component con.
+
+useFormContext = component con lấy form từ FormProvider.
 
 # Cách debug
 
