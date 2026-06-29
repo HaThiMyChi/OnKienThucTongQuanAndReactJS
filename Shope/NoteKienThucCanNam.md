@@ -356,6 +356,22 @@ FormProvider = chia sẻ form xuống các component con.
 
 useFormContext = component con lấy form từ FormProvider.
 
+# Lazy load
+
+- Lazy load component với React.lazy + Suspense + React Router khi component đó là page/route lớn và không cần tải ngay lúc app mở lần đầu
+
+* Lợi ích chính:
+  Lazy load giúp:
+
+- Giảm dung lượng JS tải ban đầu
+- App mở lần đầu nhanh hơn
+- Tách code theo từng page
+- User không phải tải code của page chưa dùng
+
+Note:
+Lazy load route/page lớn.
+Không lazy load component nhỏ dùng thường xuyên.
+
 # Cách debug
 
 Cách nhớ ngắn gọn

@@ -1,5 +1,5 @@
 import React from 'react'
-import type { QueryConfig } from '../../ProductList'
+import { type QueryConfig } from '../../../../hooks/useQueryConfig'
 import { createSearchParams, useNavigate } from 'react-router-dom'
 import path from '../../../../constants/path'
 
