@@ -1,6 +1,7 @@
 import type { ProductListConfig } from '../types/product.type'
 import useQueryParams from './useQueryParams'
-import { omitBy, isUndefined } from 'lodash'
+import omitBy from 'lodash/omitBy'
+import isUndefined from 'lodash/isUndefined'
 
 // Lấy toàn bộ key của ProductListConfig, rồi tạo type mới với value là string
 export type QueryConfig = {

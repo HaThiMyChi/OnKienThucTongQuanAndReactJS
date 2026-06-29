@@ -9,7 +9,7 @@ import QuantityController from '../../components/QuantityController'
 import Button from '../../components/Button'
 import type { Purchase } from '../../types/purchase.type'
 import { produce } from 'immer'
-import { keyBy } from 'lodash'
+import keyBy from 'lodash/keyBy'
 import { toast } from 'react-toastify'
 interface ExtendedPurchase extends Purchase {
   disabled: boolean

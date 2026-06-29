@@ -6,6 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { schema, type Schema } from '../../utils/rules'
 import authApi from '../../apis/auth.api'
 import { useMutation } from '@tanstack/react-query'
+// Import chỉ mỗi function omit
 import omit from 'lodash/omit'
 import { isAxiosUnprocessableEntityError } from '../../utils/utils'
 import type { ErrorResponse } from '../../types/utils.type'
