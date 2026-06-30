@@ -1,9 +1,9 @@
 import axios, { AxiosError } from 'axios'
 
 import HttpStatusCode from '../constants/httpStatusCode.enum'
-import { string } from 'yup'
 import config from '../constants/config'
 import userImage from 'src/assets/images/user.svg'
+import type { ErrorResponse } from '../types/utils.type'
 
 export function isAxiosError<T>(error: unknown): error is AxiosError<T> {
   // eslint-disable-next-line import/no-named-as-default-member
@@ -57,4 +57,15 @@ export const getAvatarUrl = (avatarName?: string | null) => {
   }
 
   return `${config.baseUrl}images/${avatarName}`
+}
+
+export function isAxiosUnauthorizedError<UnauthorizedError>(error: unknown): error is AxiosError<UnauthorizedError> {
+  return isAxiosError(error) && error.response?.status === HttpStatusCode.Unauthorized
+}
+
+export function isAxiosExpiredTokenError<UnauthorizedError>(error: unknown): error is AxiosError<UnauthorizedError> {
+  return (
+    isAxiosUnauthorizedError<ErrorResponse<{ name: string; message: string }>>(error) &&
+    error.response?.data?.data?.name === 'EXPIRED_TOKEN'
+  )
 }

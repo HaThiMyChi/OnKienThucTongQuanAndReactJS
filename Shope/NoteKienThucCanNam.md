@@ -372,6 +372,36 @@ Note:
 Lazy load route/page lớn.
 Không lazy load component nhỏ dùng thường xuyên.
 
+# Hiểu phần refresh token
+
+Kiểm tra lỗi có phải 401 do access token hết hạn không.
+
+Refresh token nên làm trong Axios response interceptor.
+
+Luồng chuẩn là:
+
+Gọi API
+→ Access token hết hạn
+→ Server trả 401 EXPIRED_TOKEN
+→ Axios interceptor bắt lỗi
+→ Gọi API refresh token
+→ Lưu access token mới
+→ Gọi lại request cũ
+→ User không bị logout
+
+Cách hiểu đơn giản:
+
+Access token = vé vào cửa ngắn hạn
+Refresh token = giấy tờ để xin vé mới
+Interceptor = người tự động kiểm tra và xin vé mới cho bạn
+
+Field Dùng để làm gì? Thời gian sống
+access_token Gọi API bình thường Ngắn
+refresh_token Xin access token mới Dài hơn
+expires Biết khi nào access token hết hạn Theo access token
+expires_refresh_token Biết khi nào refresh token hết hạn Theo refresh token
+user Lưu thông tin user đăng nhập Theo phiên đăng nhập
+
 # Cách debug
 
 Cách nhớ ngắn gọn
