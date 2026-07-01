@@ -402,6 +402,20 @@ expires Biết khi nào access token hết hạn Theo access token
 expires_refresh_token Biết khi nào refresh token hết hạn Theo refresh token
 user Lưu thông tin user đăng nhập Theo phiên đăng nhập
 
+## Cách hiểu luồng chạy xử lý token
+
+Cách tự học để nắm được ý tưởng
+
+Bạn nên học theo thứ tự này:
+
+Bước 1: Hiểu access_token dùng để gọi API
+Bước 2: Hiểu refresh_token dùng để lấy access_token mới
+Bước 3: Hiểu request interceptor tự gắn token
+Bước 4: Hiểu response interceptor bắt lỗi 401
+Bước 5: Hiểu config là request cũ
+Bước 6: Hiểu refreshTokenRequest để tránh gọi refresh nhiều lần
+Bước 7: Hiểu gọi lại request cũ sau khi có token mới
+
 # Cách debug
 
 Cách nhớ ngắn gọn

@@ -65,8 +65,8 @@ class Http {
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json',
-        'expire-access-token': 5, // 10 giây
-        'expire-refresh-token': 60 * 60 // 1 giờ
+        'expire-access-token': 60 * 60 * 24, // 1 ngày
+        'expire-refresh-token': 60 * 60 * 24 * 160 // 160 ngày
       }
     })
 
@@ -127,6 +127,13 @@ class Http {
           // thì chúng ta mới tiến hành gọi refresh token
           console.log(config)
           if (isAxiosExpiredTokenError(error) && url !== URL_REFRESH_TOKEN) {
+            //  Nếu đã có một request refresh token đang chạy
+            // → không gọi thêm cái mới
+            // → dùng lại Promise đang có
+
+            // Nếu chưa có
+            // → gọi handleRefreshToken()
+
             // Hạn chế gọi 2 lần handleRefreshToken
             this.refreshTokenRequest = this.refreshTokenRequest
               ? this.refreshTokenRequest
@@ -137,6 +144,10 @@ class Http {
                   }, 10000)
                 })
             return this.refreshTokenRequest.then((access_token) => {
+              //               config = request cũ
+              // this.instance(config) = gọi lại request cũ
+              // authorization: access_token = thay token mới vào request cũ
+
               // Nghĩa là chúng ta tiếp tục gọi lại request cũ vừa bị lỗi
               return this.instance({
                 ...config,
